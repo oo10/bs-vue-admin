@@ -64,4 +64,27 @@ body {
 .fade-leave-active {
 	opacity: 0;
 }
+
+
+::-webkit-scrollbar {
+	width:8px;
+	height:8px;
+}
+::-webkit-scrollbar-track {
+	background:#666666;
+}
+::-webkit-scrollbar-track-piece {
+	/* 外*/
+	background:#F5F5F5
+}
+::-webkit-scrollbar-thumb {
+	/* 内*/
+	background:#CCCCCC;
+	border-radius:10px;
+}
+/*::-webkit-scrollbar-thumb:hover {*/
+	/*!*鼠内*!*/
+	/*background:#666666;*/
+/*}*/
+
 </style>
