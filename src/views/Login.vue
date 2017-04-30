@@ -1,18 +1,26 @@
 <template>
-  <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="demo-ruleForm login-container">
-    <h3 class="title">系统登录</h3>
-    <el-form-item prop="account">
-      <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="账号"></el-input>
-    </el-form-item>
-    <el-form-item prop="checkPass">
-      <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码"></el-input>
-    </el-form-item>
-    <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
-    <el-form-item style="width:100%;">
-      <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>
-      <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
-    </el-form-item>
-  </el-form>
+  <div class="warp">
+    <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="demo-ruleForm login-container">
+      <h3 class="title">系统登录</h3>
+      <el-form-item prop="account">
+        <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="账号"></el-input>
+      </el-form-item>
+      <el-form-item prop="checkPass">
+        <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码"></el-input>
+      </el-form-item>
+      <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
+      <el-form-item>
+        <el-row type="flex" class="row-bg" justify="space-around">
+          <el-col :span="8">
+            <el-button style="width: 100%" type="primary" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>
+          </el-col>
+          <el-col :span="8">
+            <el-button style="width: 100%" type="primary" @click.native.prevent="handleReset2">重置</el-button>
+          </el-col>
+        </el-row>
+      </el-form-item>
+    </el-form>
+  </div>
 </template>
 
 <script>
@@ -23,8 +31,8 @@
       return {
         logining: false,
         ruleForm2: {
-          account: 'admin',
-          checkPass: '123456'
+//          account: 'admin',
+//          checkPass: '123456'
         },
         rules2: {
           account: [
@@ -77,16 +85,26 @@
 </script>
 
 <style lang="scss" scoped>
+  .warp {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background: url("https://img.alicdn.com/imgextra/i3/1876943437/TB2B1BUkbJkpuFjy1zcXXa5FFXa_!!1876943437.jpg") center center / cover;
+  }
   .login-container {
-    /*box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);*/
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    margin: auto;
     -webkit-border-radius: 5px;
     border-radius: 5px;
     -moz-border-radius: 5px;
     background-clip: padding-box;
-    margin: 180px auto;
+    transform: translateY(-50%);
     width: 350px;
     padding: 35px 35px 15px 35px;
-    background: #fff;
+    background: rgba(255,255,255,1);
     border: 1px solid #eaeaea;
     box-shadow: 0 0 25px #cac6c6;
     .title {

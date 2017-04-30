@@ -14,7 +14,7 @@
 				</el-form-item>
 				<el-form-item style="position: relative;cursor: pointer">
 					<el-button type="primary">
-						上传文件
+						上传 Excel 文件
 					</el-button>
 					<input ref="uploadInput" @change="uploadExcel" style="position: absolute;left: 0;top: 0;width: 100%;height:100%;opacity: 0;" type="file"/>
 				</el-form-item>
@@ -58,33 +58,33 @@
 
 		<!--&lt;!&ndash;列表&ndash;&gt;-->
 		<!--<el-table :data="users" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">-->
-			<!--<el-table-column type="selection" width="55">-->
-			<!--</el-table-column>-->
-			<!--<el-table-column type="index" width="60">-->
-			<!--</el-table-column>-->
-			<!--<el-table-column prop="name" label="姓名" width="120" sortable>-->
-			<!--</el-table-column>-->
-			<!--<el-table-column prop="sex" label="性别" width="100" :formatter="formatSex" sortable>-->
-			<!--</el-table-column>-->
-			<!--<el-table-column prop="age" label="年龄" width="100" sortable>-->
-			<!--</el-table-column>-->
-			<!--<el-table-column prop="birth" label="生日" width="120" sortable>-->
-			<!--</el-table-column>-->
-			<!--<el-table-column prop="addr" label="地址" min-width="180" sortable>-->
-			<!--</el-table-column>-->
-			<!--<el-table-column label="操作" width="150">-->
-				<!--<template scope="scope">-->
-					<!--<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
-					<!--<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>-->
-				<!--</template>-->
-			<!--</el-table-column>-->
+		<!--<el-table-column type="selection" width="55">-->
+		<!--</el-table-column>-->
+		<!--<el-table-column type="index" width="60">-->
+		<!--</el-table-column>-->
+		<!--<el-table-column prop="name" label="姓名" width="120" sortable>-->
+		<!--</el-table-column>-->
+		<!--<el-table-column prop="sex" label="性别" width="100" :formatter="formatSex" sortable>-->
+		<!--</el-table-column>-->
+		<!--<el-table-column prop="age" label="年龄" width="100" sortable>-->
+		<!--</el-table-column>-->
+		<!--<el-table-column prop="birth" label="生日" width="120" sortable>-->
+		<!--</el-table-column>-->
+		<!--<el-table-column prop="addr" label="地址" min-width="180" sortable>-->
+		<!--</el-table-column>-->
+		<!--<el-table-column label="操作" width="150">-->
+		<!--<template scope="scope">-->
+		<!--<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
+		<!--<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>-->
+		<!--</template>-->
+		<!--</el-table-column>-->
 		<!--</el-table>-->
 
 		<!--&lt;!&ndash;工具条&ndash;&gt;-->
 		<!--<el-col :span="24" class="toolbar">-->
-			<!--<el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>-->
-			<!--<el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">-->
-			<!--</el-pagination>-->
+		<!--<el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>-->
+		<!--<el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">-->
+		<!--</el-pagination>-->
 		<!--</el-col>-->
 
 		<!--编辑界面-->
@@ -146,65 +146,61 @@
 </template>
 
 <script>
-	import util from '../../common/js/util'
-	//import NProgress from 'nprogress'
-	import { getUserListPage, removeUser, batchRemoveUser, editUser, addUser } from '../../api/api';
+    import util from '../../common/js/util'
+    //import NProgress from 'nprogress'
+    import { getUserListPage, removeUser, batchRemoveUser, editUser, addUser } from '../../api/api';
 
-	export default {
-		data() {
-			return {
-			    wb: '',//读取完成的数据
-			    rABS : false, //是否将文件读取为二进制字符串
+    export default {
+        data() {
+            return {
+                wb: '',//读取完成的数据
+                rABS : false, //是否将文件读取为二进制字符串
                 uploadData: [],
-                fileList: [{
-                    name:'aa',
-					url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-                    status: 'finished'}],
                 filters: {
-					name: ''
-				},
-				users: [],
-				total: 0,
-				page: 1,
-				listLoading: false,
-				sels: [],//列表选中列
+                    name: ''
+                },
+                users: [],
+                total: 0,
+                page: 1,
+                listLoading: false,
+                sels: [],//列表选中列
 
-				editFormVisible: false,//编辑界面是否显示
-				editLoading: false,
-				editFormRules: {
-					name: [
-						{ required: true, message: '请输入姓名', trigger: 'blur' }
-					]
-				},
-				//编辑界面数据
-				editForm: {
-					id: 0,
-					name: '',
-					sex: -1,
-					age: 0,
-					birth: '',
-					addr: ''
-				},
+                editFormVisible: false,//编辑界面是否显示
+                editLoading: false,
+                editFormRules: {
+                    name: [
+                        { required: true, message: '请输入姓名', trigger: 'blur' }
+                    ]
+                },
+                //编辑界面数据
+                editForm: {
+                    id: 0,
+                    name: '',
+                    sex: -1,
+                    age: 0,
+                    birth: '',
+                    addr: ''
+                },
 
-				addFormVisible: false,//新增界面是否显示
-				addLoading: false,
-				addFormRules: {
-					name: [
-						{ required: true, message: '请输入姓名', trigger: 'blur' }
-					]
-				},
-				//新增界面数据
-				addForm: {
-					name: '',
-					sex: -1,
-					age: 0,
-					birth: '',
-					addr: ''
-				}
+                addFormVisible: false,//新增界面是否显示
+                addLoading: false,
+                addFormRules: {
+                    name: [
+                        { required: true, message: '请输入姓名', trigger: 'blur' }
+                    ]
+                },
+                //新增界面数据
+                addForm: {
+                    name: '',
+                    sex: -1,
+                    age: 0,
+                    birth: '',
+                    addr: ''
+                }
 
-			}
-		},
-		methods: {
+            }
+        },
+        methods: {
 
             deleteRow(index, rows) {
                 this.$confirm('确认删除该记录吗?', '提示', {
@@ -214,14 +210,19 @@
                 })
             },
             importf() {//导入
-				let obj = this.$refs.uploadInput
-				let _this = this
+                let obj = this.$refs.uploadInput
+                let _this = this
 
                 console.log(obj.files)
 
                 if(!obj.files) {
                     return;
                 }
+
+                if(obj.files[0].name.slice(-4)!='.xls') {
+                    this.$message.error('不支持的文件格式，请上传 Excel 文件');
+                    return;
+				}
 
                 let f = obj.files[0];
                 let reader = new FileReader();
@@ -246,7 +247,7 @@
                         _this.uploadData =  XLSX.utils.sheet_to_json(_this.wb.Sheets[_this.wb.SheetNames[0]]) ;
                         console.log(JSON.stringify(_this.uploadData))
                         _this.listLoading = false
-					},1000)
+                    },1000)
                 };
                 if(_this.rABS) {
                     reader.readAsArrayBuffer(f);
@@ -265,159 +266,174 @@
             },
 
             uploadExcel(){
-                console.log('000')
-                this.importf()
-			},
+                try{
+                    console.warn(999)
+                    this.importf()
+                }
+                catch (err){
+                    console.log(err)
 
-			//性别显示转换
-			formatSex: function (row, column) {
-				return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
-			},
-			handleCurrentChange(val) {
-				this.page = val;
-				this.getUsers();
-			},
-			//获取用户列表
-			getUsers() {
-				let para = {
-					page: this.page,
-					name: this.filters.name
-				};
-				this.listLoading = true;
-				//NProgress.start();
-				getUserListPage(para).then((res) => {
-					this.total = res.data.total;
-					this.users = res.data.users;
-					console.log(res.data.users)
-					this.listLoading = false;
-					//NProgress.done();
-				});
-			},
-			//删除
-			handleDel: function (index, row) {
-				this.$confirm('确认删除该记录吗?', '提示', {
-					type: 'warning'
-				}).then(() => {
-					this.listLoading = true;
-					//NProgress.start();
-					let para = { id: row.id };
-					removeUser(para).then((res) => {
-						this.listLoading = false;
-						//NProgress.done();
-						this.$message({
-							message: '删除成功',
-							type: 'success'
-						});
-						this.getUsers();
-					});
-				}).catch(() => {
+                    this.$alert(err, '遇到错误', {
+                        confirmButtonText: '确定',
+                        callback: action => {
+//                            this.$message({
+//                                type: 'info',
+//                                message: `action: ${ action }`
+//                            });
+                        }
+                    })
+                }
+            },
 
-				});
-			},
-			//显示编辑界面
-			handleEdit: function (index, row) {
-				this.editFormVisible = true;
-				this.editForm = Object.assign({}, row);
-			},
-			//显示新增界面
-			handleAdd: function () {
-				this.addFormVisible = true;
-				this.addForm = {
-					name: '',
-					sex: -1,
-					age: 0,
-					birth: '',
-					addr: ''
-				};
-			},
-			//编辑
-			editSubmit: function () {
-				this.$refs.editForm.validate((valid) => {
-					if (valid) {
-						this.$confirm('确认提交吗？', '提示', {}).then(() => {
-							this.editLoading = true;
-							//NProgress.start();
-							let para = Object.assign({}, this.editForm);
-							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-							editUser(para).then((res) => {
-								this.editLoading = false;
-								//NProgress.done();
-								this.$message({
-									message: '提交成功',
-									type: 'success'
-								});
-								this.$refs['editForm'].resetFields();
-								this.editFormVisible = false;
-								this.getUsers();
-							});
-						});
-					}
-				});
-			},
-			//新增
-			addSubmit: function () {
-				this.$refs.addForm.validate((valid) => {
-					if (valid) {
-						this.$confirm('确认提交吗？', '提示', {}).then(() => {
-							this.addLoading = true;
-							//NProgress.start();
-							let para = Object.assign({}, this.addForm);
-							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-							addUser(para).then((res) => {
-								this.addLoading = false;
-								//NProgress.done();
-								this.$message({
-									message: '提交成功',
-									type: 'success'
-								});
-								this.$refs['addForm'].resetFields();
-								this.addFormVisible = false;
-								this.getUsers();
-							});
-						});
-					}
-				});
-			},
-			selsChange: function (sels) {
-				this.sels = sels;
-			},
-			//批量删除
-			batchRemove: function () {
-				var ids = this.sels.map(item => item.id).toString();
-				this.$confirm('确认删除选中记录吗？', '提示', {
-					type: 'warning'
-				}).then(() => {
-					this.listLoading = true;
-					//NProgress.start();
-					let para = { ids: ids };
-					batchRemoveUser(para).then((res) => {
-						this.listLoading = false;
-						//NProgress.done();
-						this.$message({
-							message: '删除成功',
-							type: 'success'
-						});
-						this.getUsers();
-					});
-				}).catch(() => {
+            //性别显示转换
+            formatSex: function (row, column) {
+                return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
+            },
+            handleCurrentChange(val) {
+                this.page = val;
+                this.getUsers();
+            },
+            //获取用户列表
+            getUsers() {
+                let para = {
+                    page: this.page,
+                    name: this.filters.name
+                };
+                this.listLoading = true;
+                //NProgress.start();
+                getUserListPage(para).then((res) => {
+                    this.total = res.data.total;
+                    this.users = res.data.users;
+                    console.log(res.data.users)
+                    this.listLoading = false;
+                    //NProgress.done();
+                });
+            },
+            //删除
+            handleDel: function (index, row) {
+                this.$confirm('确认删除该记录吗?', '提示', {
+                    type: 'warning'
+                }).then(() => {
+                    this.listLoading = true;
+                    //NProgress.start();
+                    let para = { id: row.id };
+                    removeUser(para).then((res) => {
+                        this.listLoading = false;
+                        //NProgress.done();
+                        this.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        });
+                        this.getUsers();
+                    });
+                }).catch(() => {
 
-				});
-			}
-		},
-		mounted() {
-            console.warn(8)
+                });
+            },
+            //显示编辑界面
+            handleEdit: function (index, row) {
+                this.editFormVisible = true;
+                this.editForm = Object.assign({}, row);
+            },
+            //显示新增界面
+            handleAdd: function () {
+                this.addFormVisible = true;
+                this.addForm = {
+                    name: '',
+                    sex: -1,
+                    age: 0,
+                    birth: '',
+                    addr: ''
+                };
+            },
+            //编辑
+            editSubmit: function () {
+                this.$refs.editForm.validate((valid) => {
+                    if (valid) {
+                        this.$confirm('确认提交吗？', '提示', {}).then(() => {
+                            this.editLoading = true;
+                            //NProgress.start();
+                            let para = Object.assign({}, this.editForm);
+                            para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
+                            editUser(para).then((res) => {
+                                this.editLoading = false;
+                                //NProgress.done();
+                                this.$message({
+                                    message: '提交成功',
+                                    type: 'success'
+                                });
+                                this.$refs['editForm'].resetFields();
+                                this.editFormVisible = false;
+                                this.getUsers();
+                            });
+                        });
+                    }
+                });
+            },
+            //新增
+            addSubmit: function () {
+                this.$refs.addForm.validate((valid) => {
+                    if (valid) {
+                        this.$confirm('确认提交吗？', '提示', {}).then(() => {
+                            this.addLoading = true;
+                            //NProgress.start();
+                            let para = Object.assign({}, this.addForm);
+                            para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
+                            addUser(para).then((res) => {
+                                this.addLoading = false;
+                                //NProgress.done();
+                                this.$message({
+                                    message: '提交成功',
+                                    type: 'success'
+                                });
+                                this.$refs['addForm'].resetFields();
+                                this.addFormVisible = false;
+                                this.getUsers();
+                            });
+                        });
+                    }
+                });
+            },
+            selsChange: function (sels) {
+                this.sels = sels;
+            },
+            //批量删除
+            batchRemove: function () {
+                var ids = this.sels.map(item => item.id).toString();
+                this.$confirm('确认删除选中记录吗？', '提示', {
+                    type: 'warning'
+                }).then(() => {
+                    this.listLoading = true;
+                    //NProgress.start();
+                    let para = { ids: ids };
+                    batchRemoveUser(para).then((res) => {
+                        this.listLoading = false;
+                        //NProgress.done();
+                        this.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        });
+                        this.getUsers();
+                    });
+                }).catch(() => {
+
+                });
+            }
+        },
+        mounted() {
 //            this.getUsers();
             this.listLoading = true
 
             setTimeout(()=>{
 
-                this.uploadData = [{"学号":"14132401984","姓名":"赵广军","计算机电路基础":"20","数据结构":"38","概率统计":"54","计算机组成原理":"61","算法设计与分析":"及格","数据结构与算法设计实验":"中","操作系统":"68","多媒体技术":"及格","IT企业参观见习":"优","程序设计课程设计":"良","大学体育(3)":"77","大学体育(4)":"84","马克思主义基本原理":"71","大学英语A(3)":"51","大学物理(2)":"36","大学物理实验(2)":"0","毛泽东思想和中国特色理论体系概论":"61","大学英语A(4)":"77","平均成绩":"58.78 ","排名":"137","不及格科数":"6"},{"学号":"14132401984","姓名":"赵广军","计算机电路基础":"20","数据结构":"38","概率统计":"54","计算机组成原理":"61","算法设计与分析":"及格","数据结构与算法设计实验":"中","操作系统":"68","多媒体技术":"及格","IT企业参观见习":"优","程序设计课程设计":"良","大学体育(3)":"77","大学体育(4)":"84","马克思主义基本原理":"71","大学英语A(3)":"51","大学物理(2)":"36","大学物理实验(2)":"0","毛泽东思想和中国特色理论体系概论":"61","大学英语A(4)":"77","平均成绩":"58.78 ","排名":"137","不及格科数":"6"}]
+                this.uploadData = [{"学号":"14132401984","姓名":"赵广军","计算机电路基础":"20","数据结构":"38","概率统计":"54","计算机组成原理":"61","算法设计与分析":"及格","数据结构与算法设计实验":"中","操作系统":"68","多媒体技术":"及格","IT企业参观见习":"优","程序设计课程设计":"良","大学体育(3)":"77","大学体育(4)":"84","马克思主义基本原理":"71","大学英语A(3)":"51","大学物理(2)":"36","大学物理实验(2)":"0","毛泽东思想和中国特色理论体系概论":"61","大学英语A(4)":"77","平均成绩":"58.78 ","排名":"137","不及格科数":"6"}]
                 this.listLoading = false
+
             },1000)
 
 
         }
-	}
+    }
 
 </script>
 
