@@ -1,6 +1,8 @@
 <template>
 	<section>
-		<!--工具条-->
+
+
+		<!--工具条1-->
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
 			<el-form :inline="true" :model="filters">
 				<el-form-item>
@@ -22,6 +24,9 @@
 				</el-form-item>
 			</el-form>
 		</el-col>
+
+
+		<!--列表-->
 
 		<el-table :data="uploadData" border highlight-current-row v-loading="listLoading" @selection-change="selsChange" height="700" style="width: 100%">
 			<el-table-column type="index" style="text-align: center">
@@ -48,13 +53,21 @@
 			</el-table-column>
 			<el-table-column prop="不及格科数" label="不及格科数" sortable>
 			</el-table-column>
-			<el-table-column label="操作" width="90" fixed="right">
+			<el-table-column label="操作" width="140" fixed="right" style="text-align:center">
 				<template scope="scope">
-					<!--<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
+					<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
 					<el-button type="danger" size="small" @click.native.prevent="deleteRow(scope.$index, uploadData)">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
+
+
+		<!--工具条2-->
+		<el-col :span="24" class="toolbar">
+			<el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
+			<el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
+			</el-pagination>
+		</el-col>
 
 		<!--&lt;!&ndash;列表&ndash;&gt;-->
 		<!--<el-table :data="users" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">-->
@@ -147,8 +160,10 @@
 
 <script>
     import util from '../../common/js/util'
-    //import NProgress from 'nprogress'
-    import { getUserListPage, removeUser, batchRemoveUser, editUser, addUser } from '../../api/api';
+    import axios from 'axios';
+    import Qs from 'qs'
+
+    import { getUserListPage, removeUser, batchRemoveUser, editUser, addUser  } from '../../api/api';
 
     export default {
         data() {
@@ -219,9 +234,9 @@
                     return;
                 }
 
-                if(obj.files[0].name.slice(-4)!='.xls') {
+                if(obj.files[0].name.slice(-4)!=='.xls') {
                     this.$message.error('不支持的文件格式，请上传 Excel 文件');
-                    return;
+                    return false;
 				}
 
                 let f = obj.files[0];
@@ -243,11 +258,34 @@
                     //wb.SheetNames[0]是获取Sheets中第一个Sheet的名字
                     //wb.Sheets[Sheet名]获取第一个Sheet的数据
 
-                    setTimeout(()=>{
+					setTimeout(()=>{
                         _this.uploadData =  XLSX.utils.sheet_to_json(_this.wb.Sheets[_this.wb.SheetNames[0]]) ;
-                        console.log(JSON.stringify(_this.uploadData))
-                        _this.listLoading = false
-                    },1000)
+                        $.ajax({
+                            type: "post",
+                            url: "http://f6e141e2.ngrok.io/common/upload",
+                            data:{
+                                data:JSON.stringify(_this.uploadData)
+                            },
+                            success: function(data){
+                                _this.listLoading = false
+                                if(data.success==true){
+                                    _this.$notify.success({
+                                        title: '成功',
+                                        message: '上传成功啦~',
+                                    });
+                                }
+                                else{
+                                    _this.$notify.error({
+                                        title: '错误',
+                                        message: '上传失败，建议您刷新后重试~',
+                                    });
+                                }
+                            },
+                            error: function(err){
+                                console.log(err)
+                            }
+                        });
+					},20)
                 };
                 if(_this.rABS) {
                     reader.readAsArrayBuffer(f);
@@ -267,7 +305,6 @@
 
             uploadExcel(){
                 try{
-                    console.warn(999)
                     this.importf()
                 }
                 catch (err){
@@ -276,10 +313,10 @@
                     this.$alert(err, '遇到错误', {
                         confirmButtonText: '确定',
                         callback: action => {
-//                            this.$message({
-//                                type: 'info',
-//                                message: `action: ${ action }`
-//                            });
+                            this.$message({
+                                type: 'info',
+                                message: `${ action }:操作已取消`
+                            });
                         }
                     })
                 }
@@ -376,12 +413,10 @@
                     if (valid) {
                         this.$confirm('确认提交吗？', '提示', {}).then(() => {
                             this.addLoading = true;
-                            //NProgress.start();
                             let para = Object.assign({}, this.addForm);
                             para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
                             addUser(para).then((res) => {
                                 this.addLoading = false;
-                                //NProgress.done();
                                 this.$message({
                                     message: '提交成功',
                                     type: 'success'
@@ -404,11 +439,9 @@
                     type: 'warning'
                 }).then(() => {
                     this.listLoading = true;
-                    //NProgress.start();
                     let para = { ids: ids };
                     batchRemoveUser(para).then((res) => {
                         this.listLoading = false;
-                        //NProgress.done();
                         this.$message({
                             message: '删除成功',
                             type: 'success'
@@ -425,8 +458,7 @@
             this.listLoading = true
 
             setTimeout(()=>{
-
-                this.uploadData = [{"学号":"14132401984","姓名":"赵广军","计算机电路基础":"20","数据结构":"38","概率统计":"54","计算机组成原理":"61","算法设计与分析":"及格","数据结构与算法设计实验":"中","操作系统":"68","多媒体技术":"及格","IT企业参观见习":"优","程序设计课程设计":"良","大学体育(3)":"77","大学体育(4)":"84","马克思主义基本原理":"71","大学英语A(3)":"51","大学物理(2)":"36","大学物理实验(2)":"0","毛泽东思想和中国特色理论体系概论":"61","大学英语A(4)":"77","平均成绩":"58.78 ","排名":"137","不及格科数":"6"}]
+//                this.uploadData = [{"学号":"14132401984","姓名":"赵广军","计算机电路基础":"20","数据结构":"38","概率统计":"54","计算机组成原理":"61","算法设计与分析":"及格","数据结构与算法设计实验":"中","操作系统":"68","多媒体技术":"及格","IT企业参观见习":"优","程序设计课程设计":"良","大学体育(3)":"77","大学体育(4)":"84","马克思主义基本原理":"71","大学英语A(3)":"51","大学物理(2)":"36","大学物理实验(2)":"0","毛泽东思想和中国特色理论体系概论":"61","大学英语A(4)":"77","平均成绩":"58.78 ","排名":"137","不及格科数":"6"}]
                 this.listLoading = false
 
             },1000)

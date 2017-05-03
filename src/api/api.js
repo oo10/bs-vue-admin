@@ -15,3 +15,22 @@ export const batchRemoveUser = params => { return axios.get(`${base}/user/batchr
 export const editUser = params => { return axios.get(`${base}/user/edit`, { params: params }); };
 
 export const addUser = params => { return axios.get(`${base}/user/add`, { params: params }); };
+
+
+
+
+
+// export const uploadData = params => { return axios.post(`${base1}/common/bind`, params).then(res => res.data); };
+
+
+// export const uploadData = params => {
+//     return axios.post(`${base1}/common/bind`,params)
+//     .then(function(res){
+//         console.log(res);
+//         return res;
+//     })
+//     .catch(function(err){
+//         console.log(err);
+//         return err;
+//     })
+// };
